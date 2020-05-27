@@ -1,6 +1,17 @@
 # created by clay on 05-22-20
 import numpy as np
 from matplotlib import pyplot as plt
+import yfinance as yf
+
+def scale_inputs(inputs):
+    global range_of_inputs
+    range_of_inputs = np.max(inputs) - np.min(inputs)
+    return inputs / range_of_inputs
+
+def scale_outputs(outputs):
+    global range_of_outputs
+    range_of_outputs = np.max(outputs) - np.min(outputs)
+    return outputs / range_of_outputs
 
 class NeuralNetwork:
     
@@ -41,35 +52,28 @@ class NeuralNetwork:
         return self.sigmoid(np.dot(new_data, self.weights))
 
 
-# inputs = np.array([[1,0,0],
-#                    [1,0,1],
-#                    [0,1,0],
-#                    [0,1,1]])
+inputs = np.array([[1, 2, 3],
+                   [4, 5, 6],
+                   [7, 8, 9],
+                   [2, 3, 4]])
 
-inputs = np.array([[.1, .2, .3],
-                   [.4, .5, .6],
-                   [.7, .8, .9],
-                   [.2, .3, .4]])
+outputs = np.array([[4], [7], [10], [5]])
 
-# outputs = np.array([[1],[1],[0],[0]])
+weights = np.array([[.8],[.4,],[.7]])
 
-outputs = np.array([[.4], [.7], [1.0], [.5]])
-
-
-weights = np.array([[.5],[.5,],[.5]])
+inputs = scale_inputs(inputs)
+outputs = scale_outputs(outputs)
 
 Go = NeuralNetwork(inputs, outputs, weights)
 
 Go.train()
 
-test = np.array([[.4, .5, .6]])
+test = np.array([[.5, .625, .75]])
 
-answer = Go.predict(test)
-# final = Go.reverse_sigmoid(answer)
-print(answer)
+print(Go.predict(test)*range_of_inputs)
 
 # print(Go.epoch_list)
 # print(Go.error_list)
 
-plt.plot(Go.epoch_list, Go.error_list)
-plt.show()
+# plt.plot(Go.epoch_list, Go.error_list)
+# plt.show()
