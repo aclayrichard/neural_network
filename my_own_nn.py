@@ -52,25 +52,29 @@ class NeuralNetwork:
         return self.sigmoid(np.dot(new_data, self.weights))
 
 
-inputs = np.array([[1, 2, 3],
-                   [4, 5, 6],
-                   [7, 8, 9],
-                   [2, 3, 4]])
+data = yf.download('AAPL', start='2010-04-10', stop='2020-05-27')
+data = np.array(data['High'])
+print(len(data))
 
-outputs = np.array([[4], [7], [10], [5]])
+# inputs = np.array([[1, 2, 3],
+#                    [4, 5, 6],
+#                    [7, 8, 9],
+#                    [2, 3, 4]])
 
-weights = np.array([[.8],[.4,],[.7]])
+# outputs = np.array([[4], [7], [10], [5]])
 
-inputs = scale_inputs(inputs)
-outputs = scale_outputs(outputs)
+# weights = np.array([[.8],[.4,],[.7]])
 
-Go = NeuralNetwork(inputs, outputs, weights)
+# inputs = scale_inputs(inputs)
+# outputs = scale_outputs(outputs)
 
-Go.train()
+# Go = NeuralNetwork(inputs, outputs, weights)
 
-test = np.array([[.5, .625, .75]])
+# Go.train()
 
-print(Go.predict(test)*range_of_inputs)
+# test = np.array([[.5, .625, .75]])
+
+# print(Go.predict(test)*range_of_inputs)
 
 # print(Go.epoch_list)
 # print(Go.error_list)
