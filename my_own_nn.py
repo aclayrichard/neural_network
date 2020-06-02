@@ -6,12 +6,15 @@ import yfinance as yf
 def scale_inputs(inputs):
     global range_of_inputs
     range_of_inputs = np.max(inputs) - np.min(inputs)
-    return inputs / range_of_inputs
+    return (inputs - np.min(inputs)) / range_of_inputs
 
 def scale_outputs(outputs):
     global range_of_outputs
     range_of_outputs = np.max(outputs) - np.min(outputs)
-    return outputs / range_of_outputs
+    return (outputs - np.min(outputs)) / range_of_outputs
+
+def scale(array):
+    return (array - np.min(array)) / (np.max(array) - np.min(array))
 
 class NeuralNetwork:
     
@@ -54,7 +57,31 @@ class NeuralNetwork:
 
 data = yf.download('AAPL', start='2010-04-10', stop='2020-05-27')
 data = np.array(data['High'])
-print(len(data))
+scaled_data = scale(data)
+# print(len(scaled_data))
+
+def create_train_input(scaled_data):
+
+    train_input = []
+    train_size = 100
+    for i in range(train_size,len(scaled_data)):
+        input_layer = scaled_data[i-train_size:i]
+        train_input = np.append(train_input,input_layer)
+        
+    return train_input
+
+def create_train_output(scaled_data):
+
+    train_size = 100
+    train_output = []
+    for i in range(train_size, len(scaled_data)):
+        train_output = np.append(train_output, scaled_data[i])
+
+    return train_output
+
+print(create_train_input(scaled_data))
+print(create_train_output(scaled_data))
+
 
 # inputs = np.array([[1, 2, 3],
 #                    [4, 5, 6],
@@ -72,9 +99,9 @@ print(len(data))
 
 # Go.train()
 
-# test = np.array([[.5, .625, .75]])
+# test = np.array([[.3,.4,.5]])
 
-# print(Go.predict(test)*range_of_inputs)
+# print(Go.predict(test))
 
 # print(Go.epoch_list)
 # print(Go.error_list)
