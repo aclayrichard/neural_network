@@ -63,8 +63,10 @@ class NeuralNetwork:
             return x * (1 - x)
         return 1 / (1 + np.exp(-x))
 
+
     def reverse_sigmoid(self, y):
         return np.log(y / (1 - y))
+
 
     def feed_forward(self):
         self.hidden_layer = self.sigmoid(np.dot(self.inputs, self.weights), derivative=False)
@@ -76,12 +78,13 @@ class NeuralNetwork:
         self.weights += np.dot(self.inputs.T, stepsize)
 
 
-    def train(self, epochs=25000):
+    def train(self, epochs=250000):
         for epoch in range(epochs):
             self.feed_forward()
             self.back_propogate()
             self.error_list = np.append(self.error_list, np.average(np.abs(self.cost)))
             self.epoch_list = np.append(self.epoch_list, epoch)
+
 
     def predict(self, new_data):
         return self.sigmoid(np.dot(new_data, self.weights))
@@ -113,25 +116,30 @@ def create_train_output(data):
 
     return train_output
 
+
+train_size = 100
+
 weights = []
-for i in range(100):
+for i in range(train_size):
     weights.append(np.random.uniform())
 weights = np.reshape(weights, [-1, 1])
+weights = weights.tolist()
 
 inputs = create_train_input(data)
+inputs = np.reshape(inputs,[len(inputs),train_size])
 outputs = create_train_output(data)
 outputs = np.reshape(outputs, [-1,1])
 
-# print(len(inputs))
+# print(inputs)
 # print(len(outputs))
-# print(len(weights))
+# print(weights)
 
 scaled_inputs = scale_inputs(inputs, outputs)
 scaled_outputs = scale_outputs(inputs, outputs)
 
-# print(scaled_inputs, scale_outputs)
+# print(scaled_inputs, scaled_outputs)
+# print(scaled_data[-100:])
 
-print(scaled_data[-100:])
 # inputs = np.array([[1, 2, 3],
 #                    [4, 5, 6],
 #                    [7, 8, 9],
@@ -143,24 +151,23 @@ print(scaled_data[-100:])
 
 # print(inputs)
 # print(outputs)
-# print(weights)
+# print(type(weights))
 
 # scaled_inputs = scale_inputs(inputs, outputs)
 # scaled_outputs = scale_outputs(inputs, outputs)
 
-# print(scaled_inputs)
-# print(scaled_outputs)
+## print(scaled_inputs)
+## print(scaled_outputs)
 
-# Go = NeuralNetwork(scaled_inputs, scaled_outputs, weights)
+Go = NeuralNetwork(scaled_inputs, scaled_outputs, weights)
+Go.train()
 
-# Go.train()
-
-# test = np.array(scaled_data[-100:])
-
-# print(Go.predict(test))
+# test = np.array([.1,.2,.3])
+test = np.array(scaled_data[-100:])
+print(Go.predict(test))
 
 # print(Go.epoch_list)
 # print(Go.error_list)
 
-# plt.plot(Go.epoch_list, Go.error_list)
-# plt.show()
+plt.plot(Go.epoch_list, Go.error_list)
+plt.show()
